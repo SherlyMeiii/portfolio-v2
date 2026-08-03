@@ -1,0 +1,3254 @@
+@import url('https://fonts.googleapis.com/css2?family=Italiana&family=Cormorant+Garamond:wght@300;400&display=swap');
+
+/* Reset and base styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --color-primary: #f8b195;  /* 柔和的珊瑚色 */
+    --color-secondary: #f67280; /* 粉紅色 */
+    --color-accent: #c06c84;   /* 深玫瑰色 */
+    --color-light: #fef6e4;    /* 米色背景 */
+    --color-dark: #5e6472;     /* 柔和的深灰色 */
+    --color-gray: #8d7b68;     /* 溫暖的灰褐色 */
+    --font-main: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    --transition: all 0.3s ease;
+}
+
+body {
+    overflow-x: hidden;
+    font-family: var(--font-main);
+    line-height: 1.6;
+    color: var(--color-dark);
+    /* ── 整頁背景：G 版　粉 → 蜜桃 → 米黃，完全不經過紫 ──
+       之前的版本在中段讓粉紫撞上米黃，兩個色系混出濁灰，
+       就是你覺得醜的那一帶。這版把紫整個拿掉，
+       改走 粉 → 蜜桃 → 米黃，收在你原本的 #fef6e4。
+       色暈維持 hero 的手法：大範圍、低透明度，把色帶邊界揉開。 */
+    background-color: #fef6e4;
+    background-image:
+        radial-gradient(88vw 50vh at 20% 10%, rgba(255, 196, 201, 0.26), transparent 70%),
+        radial-gradient(82vw 46vh at 86% 30%, rgba(255, 205, 195, 0.20), transparent 72%),
+        radial-gradient(90vw 50vh at 10% 52%, rgba(255, 214, 196, 0.18), transparent 72%),
+        radial-gradient(80vw 46vh at 88% 72%, rgba(255, 224, 205, 0.13), transparent 72%),
+        radial-gradient(86vw 48vh at 16% 90%, rgba(255, 214, 196, 0.09), transparent 72%),
+        /* 前 100vh 維持跟 hero 同濃度的粉，遮罩淡出時露出來的還是粉 */
+        linear-gradient(174deg,
+            #ffd1d1    0,
+            #ffd0cf   55vh,
+            #ffd8ce   95vh,     /* Scroll Down 大約在這裡，仍是粉 */
+            #fde2d6  135vh,     /* 蜜桃 */
+            #fdecdd  185vh,
+            #fef2e1  240vh,
+            #fef6e4  300vh,
+            #fef6e4   100%);
+    background-repeat: no-repeat;
+    background-attachment: scroll;
+}
+
+/* Navigation */
+.navbar {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    background: transparent;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    z-index: 1000;
+    border-bottom: none;
+    transition: all 0.3s ease;
+}
+
+.navbar.scrolled {
+    background: linear-gradient(to right,
+        rgba(255, 209, 209, 0.95),
+        rgba(255, 211, 182, 0.95),
+        rgba(255, 182, 185, 0.95)
+    );
+    box-shadow: 0 2px 20px rgba(0, 0, 0, 0.05);
+}
+
+.nav-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo {
+    font-family: 'Playfair Display', serif;
+    font-size: 2rem;
+    font-weight: 700;
+    color: #2d3436;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    background: linear-gradient(45deg, #2d3436, #a18cd1);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    letter-spacing: 1px;
+}
+
+.logo:hover {
+    transform: translateY(-2px);
+    background: linear-gradient(45deg, #2d3436, #fbc2eb);
+    -webkit-background-clip: text;
+    background-clip: text;
+}
+
+.nav-links {
+    display: flex;
+    gap: 2rem;  
+    list-style: none;
+}
+
+.nav-link {
+    position: relative;
+    text-decoration: none;
+    color: #2d3436;
+    padding: 0.3rem 0;
+    transition: all 0.3s ease;
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 400;
+    font-size: 1rem;  
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+}
+
+.nav-link::before,
+.nav-link::after {
+    content: '✧';
+    position: absolute;
+    font-size: 0.7em;
+    opacity: 0;
+    transition: all 0.3s ease;
+    color: #ff69b4;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.nav-link::before {
+    left: -1.2em;
+    transform: translate(5px, -50%);
+}
+
+.nav-link::after {
+    right: -1.2em;
+    transform: translate(-5px, -50%);
+}
+
+.nav-link:hover {
+    transform: translateY(-2px);
+    color: #ff69b4;
+}
+
+.nav-link:hover::before {
+    opacity: 1;
+    transform: translate(0, -50%);
+}
+
+.nav-link:hover::after {
+    opacity: 1;
+    transform: translate(0, -50%);
+}
+
+.nav-link .link-lines {
+    position: absolute;
+    left: 0;
+    bottom: -2px;
+    width: 100%;
+    height: 8px;
+    overflow: hidden;
+}
+
+.nav-link .line {
+    position: absolute;
+    left: 0;
+    height: 1px;
+    width: 100%;
+    background: linear-gradient(to right, #ffb6c1, #ff69b4);
+    transition: all 0.4s ease;
+}
+
+.nav-link .line1 {
+    bottom: 4px;
+    transform-origin: left;
+    transform: scaleX(0.7) translateX(-100%);
+}
+
+.nav-link .line2 {
+    bottom: 1px;
+    transform-origin: right;
+    transform: scaleX(0.5) translateX(100%);
+}
+
+.nav-link:hover .line1 {
+    animation: navSlideLine1 1s infinite;
+}
+
+.nav-link:hover .line2 {
+    animation: navSlideLine2 1s infinite;
+}
+
+@keyframes navSlideLine1 {
+    0% {
+        transform: scaleX(0.7) translateX(-100%);
+    }
+    50% {
+        transform: scaleX(0.8) translateX(0);
+    }
+    100% {
+        transform: scaleX(0.7) translateX(100%);
+    }
+}
+
+@keyframes navSlideLine2 {
+    0% {
+        transform: scaleX(0.5) translateX(100%);
+    }
+    50% {
+        transform: scaleX(0.6) translateX(0);
+    }
+    100% {
+        transform: scaleX(0.5) translateX(-100%);
+    }
+}
+
+/* Hero Section */
+.hero {
+    min-height: 100vh;
+    background: linear-gradient(
+        135deg,
+        #ffd1d1 0%,
+        #ffd3b6 20%,
+        #ffb6b9 40%,
+        #fbc2eb 60%,
+        #a6c1ee 80%,
+        #ffd1d1 100%
+    );
+    background-size: 400% 400%;
+    animation: gradientFlow 15s ease infinite;
+    /* 底部溶掉，讓 hero 融進下面那條漸層。這行就是接縫消失的關鍵。 */
+    -webkit-mask-image: linear-gradient(180deg, #000 62%, rgba(0,0,0,.5) 84%, transparent 100%);
+            mask-image: linear-gradient(180deg, #000 62%, rgba(0,0,0,.5) 84%, transparent 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 6rem 2rem 2rem;
+    position: relative;
+    overflow: hidden;
+}
+
+@keyframes gradientFlow {
+    0% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+.hero::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: 
+        radial-gradient(circle at 20% 20%, rgba(255, 255, 255, 0.3) 0%, transparent 25%),
+        radial-gradient(circle at 80% 80%, rgba(255, 255, 255, 0.3) 0%, transparent 25%),
+        radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.2) 0%, transparent 50%),
+        linear-gradient(45deg, rgba(255, 255, 255, 0.1) 0%, transparent 100%);
+    mix-blend-mode: overlay;
+    animation: glowPulse 8s ease-in-out infinite;
+    pointer-events: none;
+}
+
+@keyframes glowPulse {
+    0%, 100% {
+        opacity: 0.5;
+    }
+    50% {
+        opacity: 0.8;
+    }
+}
+
+.hero::after {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    right: -50%;
+    bottom: -50%;
+    background: 
+        radial-gradient(circle at center, transparent 0%, rgba(255, 255, 255, 0.1) 25%, transparent 50%),
+        radial-gradient(circle at 30% 70%, transparent 0%, rgba(255, 255, 255, 0.1) 25%, transparent 50%),
+        radial-gradient(circle at 70% 30%, transparent 0%, rgba(255, 255, 255, 0.1) 25%, transparent 50%);
+    animation: shimmerRotate 20s linear infinite;
+    pointer-events: none;
+}
+
+@keyframes shimmerRotate {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+.sparkle {
+    position: absolute;
+    background: white;
+    border-radius: 50%;
+    animation: twinkle var(--duration, 1s) ease-in-out var(--delay, 0s) infinite;
+    pointer-events: none;
+}
+
+@keyframes twinkle {
+    0%, 100% {
+        transform: scale(0) rotate(0deg);
+        opacity: 0;
+    }
+    50% {
+        transform: scale(1) rotate(180deg);
+        opacity: 0.8;
+    }
+}
+
+.hero-content {
+    position: relative;
+    z-index: 1;
+    max-width: 800px;
+    animation: fadeInUp 1s ease-out;
+}
+
+.hero-content h1 {
+    font-family: 'Italiana', serif;
+    font-size: clamp(4rem, 15vw, 8rem);
+    font-weight: 400;
+    margin-bottom: 1rem;
+    line-height: 1;
+    letter-spacing: 0.05em;
+    background: linear-gradient(45deg, 
+        #2d3436 20%, 
+        #a18cd1 40%, 
+        #fbc2eb 60%,
+        #2d3436 80%
+    );
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: shimmerText 6s linear infinite;
+}
+
+.hero-subtitle {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(1.3rem, 4vw, 2.2rem);
+    font-weight: 300;
+    font-style: italic;
+    letter-spacing: 0.1em;
+    margin: 2rem 0 3rem;
+    color: #2d3436;
+    opacity: 0.85;
+    position: relative;
+    padding: 0 2rem;
+    line-height: 1.6;
+}
+
+.hero-subtitle::before,
+.hero-subtitle::after {
+    content: '✦';
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: linear-gradient(45deg, 
+        #ffb6c1,  /* 淺粉紅 */
+        #ff69b4,  /* 亮粉紅 */
+        #ff8fab   /* 桃粉色 */
+    );
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-size: 1.4em;
+    animation: starTwinkle 2s ease-in-out infinite;
+    text-shadow: 
+        0 0 5px rgba(255, 182, 193, 0.5),   /* 淺粉紅光暈 */
+        0 0 10px rgba(255, 105, 180, 0.3),   /* 亮粉紅光暈 */
+        0 0 15px rgba(255, 143, 171, 0.2);   /* 桃粉色光暈 */
+}
+
+@keyframes starTwinkle {
+    0%, 100% {
+        opacity: 0.3;
+        transform: translateY(-50%) scale(0.8);
+        filter: blur(0px);
+    }
+    50% {
+        opacity: 1;
+        transform: translateY(-50%) scale(1.1);
+        filter: blur(1px);
+    }
+}
+
+.hero-subtitle::before {
+    left: 0;
+}
+
+.hero-subtitle::after {
+    right: 0;
+}
+
+@keyframes shimmerText {
+    0% {
+        background-position: 200% center;
+    }
+    100% {
+        background-position: -200% center;
+    }
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Skills Section */
+.skills {
+    padding: 5rem 2rem;
+    background: transparent;
+    position: relative;
+}
+
+.skills-container {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.skill-category {
+    margin-bottom: 3rem;
+}
+
+.skill-category h3 {
+    color: var(--color-primary);
+    margin-bottom: 2rem;
+    font-size: 1.5rem;
+    text-align: center;
+    position: relative;
+}
+
+.skill-category h3::after {
+    content: '';
+    position: absolute;
+    bottom: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 50px;
+    height: 3px;
+    background: linear-gradient(to right, var(--color-secondary), var(--color-accent));
+    border-radius: 2px;
+}
+
+.skill-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 2rem;
+    padding: 0 1rem;
+}
+
+.skill-item {
+    background: white;
+    padding: 1.5rem;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    transition: transform 0.3s ease;
+}
+
+.skill-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+.skill-icon {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--color-secondary);
+    color: white;
+    border-radius: 8px;
+    font-size: 1.2rem;
+}
+
+.skill-name {
+    font-size: 1rem;
+    color: var(--color-dark);
+    font-weight: 500;
+}
+
+@media (max-width: 768px) {
+    .skill-grid {
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        gap: 1rem;
+    }
+
+    .skill-item {
+        padding: 1rem;
+    }
+}
+
+/* Projects Section */
+.projects {
+    padding: 5rem 2rem;
+    background: transparent;
+    position: relative;
+}
+
+.projects::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 0;                      /* 原本是 3px 的實線，就是你看到的格線 */
+    background: none;
+}
+
+.project-grid {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: grid;
+    gap: 3rem;
+}
+
+.project-card {
+    background: white;
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+    padding: 2rem;
+    align-items: center;
+}
+
+.project-card:last-child {
+    grid-template-areas: "content image";
+}
+
+.project-card:last-child .project-content {
+    grid-area: content;
+}
+
+.project-card:last-child .project-image {
+    grid-area: image;
+}
+
+.project-image {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    border-radius: 10px;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+.project-image img {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+    display: block;
+    will-change: transform;
+    transform: translateZ(0);
+    backface-visibility: hidden;
+    -webkit-font-smoothing: subpixel-antialiased;
+    transition: transform 0.3s ease;
+}
+
+.project-video {
+    width: auto;
+    height: auto;
+    max-width: 60%;  
+    border-radius: 10px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    display: block;
+    margin: 0 auto;
+}
+
+.project-image {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 2rem;
+}
+
+@media (max-width: 768px) {
+    .project-video {
+        max-width: 80%;  
+    }
+}
+
+.project-card:hover {
+    transform: translateY(-10px);
+}
+
+.project-image:hover img {
+    transform: scale(1.05);
+}
+
+.project-content {
+    padding: 2rem;
+}
+
+.project-title {
+    font-family: 'Italiana', serif;
+    font-size: 1.8rem;
+    margin-bottom: 1rem;
+    color: var(--color-primary);
+    letter-spacing: 0.05em;
+    font-weight: 400;
+    position: relative;
+    display: inline-block;
+}
+
+.project-title::after {
+    content: '';
+    position: absolute;
+    bottom: -5px;
+    left: 0;
+    width: 100%;
+    height: 1px;
+    background: linear-gradient(to right,
+        rgba(255, 105, 180, 0.3),
+        rgba(255, 182, 193, 0.3)
+    );
+}
+
+.project-description {
+    font-size: 1.1rem;
+    line-height: 1.8;
+    color: var(--color-gray);
+    margin-bottom: 1.5rem;
+}
+
+.project-links {
+    margin-top: 2rem;
+    display: flex;
+    gap: 1.5rem;
+}
+
+.project-link.link-special {
+    margin-top: 1.5rem;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.1rem;
+}
+
+.project-link {
+    text-decoration: none;
+}
+
+.project-link i {
+    transition: transform 0.3s ease;
+}
+
+.project-link:hover i {
+    transform: translateX(5px);
+}
+
+@media (max-width: 968px) {
+    .project-card,
+    .project-card:last-child {
+        grid-template-columns: 1fr;
+        grid-template-areas: "image" "content";
+    }
+
+    .project-image {
+        max-width: 1000px;
+        margin-bottom: 1rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .project-image {
+        max-width: 800px;
+    }
+}
+
+@media (max-width: 768px) {
+    .project-video {
+        max-height: 500px;
+        object-fit: contain;
+    }
+}
+
+.project-image-gallery {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2rem;
+    padding: 1rem;
+    max-width: 450px;
+    margin: 0 auto;
+}
+
+.project-image-gallery img {
+    width: 100%;
+    height: auto;
+    border-radius: 10px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
+}
+
+.project-image-gallery img:hover {
+    transform: scale(1.02);
+}
+
+@media (max-width: 768px) {
+    .project-image-gallery {
+        gap: 1.5rem;
+    }
+}
+
+/* Experience Section */
+.experience {
+    padding: 5rem 2rem;
+    background: transparent;
+    position: relative;
+}
+
+.experience::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 0;                      /* 同上 */
+    background: none;
+}
+
+.timeline {
+    max-width: 800px;
+    margin: 0 auto;
+    position: relative;
+}
+
+.timeline::before {
+    content: '';
+    position: absolute;
+    left: 50px;
+    top: 0;
+    width: 2px;
+    height: 100%;
+    background: linear-gradient(to bottom, 
+        transparent,
+        var(--color-secondary) 5%,
+        var(--color-secondary) 95%,
+        transparent
+    );
+}
+
+.timeline-item {
+    margin-bottom: 3rem;
+    padding-left: 100px;
+    position: relative;
+}
+
+.timeline-item::before {
+    content: '';
+    position: absolute;
+    left: 44px;
+    top: 0;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background-color: var(--color-secondary);
+    border: 3px solid white;
+    box-shadow: 0 0 0 3px rgba(246, 114, 128, 0.3);
+    z-index: 1;
+}
+
+.timeline-content {
+    background-color: var(--color-light);
+    padding: 1.5rem;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    position: relative;
+    transition: transform 0.3s ease;
+}
+
+.timeline-content:hover {
+    transform: translateX(10px);
+}
+
+.timeline-content::before {
+    content: '';
+    position: absolute;
+    left: -20px;
+    top: 0;
+    border-style: solid;
+    border-width: 10px;
+    border-color: transparent var(--color-light) transparent transparent;
+}
+
+.timeline-content h3 {
+    color: var(--color-primary);
+    margin-bottom: 0.5rem;
+    font-size: 1.2rem;
+}
+
+.timeline-content h4 {
+    color: var(--color-secondary);
+    margin-bottom: 0.5rem;
+    font-size: 1.1rem;
+}
+
+.timeline-date {
+    color: var(--color-gray);
+    font-size: 0.9rem;
+    margin-bottom: 1rem;
+    font-style: italic;
+}
+
+.experience-details {
+    margin: 1rem 0;
+    padding-left: 1.2rem;
+}
+
+.experience-details li {
+    margin-bottom: 0.5rem;
+    position: relative;
+    line-height: 1.4;
+}
+
+.experience-details li::before {
+    content: '•';
+    color: var(--color-secondary);
+    position: absolute;
+    left: -1.2rem;
+}
+
+.tech-used {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: 1rem;
+}
+
+.tech-used span {
+    background-color: rgba(246, 114, 128, 0.1);
+    color: var(--color-secondary);
+    padding: 0.25rem 0.75rem;
+    border-radius: 15px;
+    font-size: 0.9rem;
+    transition: all 0.3s ease;
+}
+
+.tech-used span:hover {
+    background-color: var(--color-secondary);
+    color: white;
+}
+
+/* About Section */
+.about {
+    padding: 5rem 2rem;
+    background: transparent;
+}
+
+.about-content {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: 4rem;
+    align-items: center;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+.profile-photo {
+    position: relative;
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    aspect-ratio: 3/4;
+    width: 100%;
+    max-width: 400px;
+    margin: 0 auto;
+}
+
+.profile-photo img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    transition: transform 0.3s ease;
+}
+
+.profile-photo:hover img {
+    transform: scale(1.02);
+}
+
+.about-text h2 {
+    font-size: clamp(1.9rem, 4.5vw, 2.5rem);
+    color: var(--color-primary);
+    margin-bottom: 2rem;
+    position: relative;
+}
+
+.about-text h2::after {
+    content: '';
+    position: absolute;
+    bottom: -10px;
+    left: 0;
+    width: 60px;
+    height: 4px;
+    background: var(--color-secondary);
+    border-radius: 2px;
+}
+
+.about-description {
+    font-size: 1.1rem;
+    line-height: 1.8;
+    color: var(--color-gray);
+    margin-bottom: 1.5rem;
+}
+
+.about-description:last-child {
+    margin-bottom: 0;
+}
+
+/* 968px 以下先把比例拉平，不然照片欄只剩 1/3 寬、文字擠成一長條 */
+@media (max-width: 968px) {
+    .about-content {
+        grid-template-columns: 1fr 1.6fr;
+        gap: 2.5rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .about-content {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+        text-align: center;
+    }
+
+    .profile-photo {
+        max-width: 300px;
+        margin-bottom: 2rem;
+    }
+}
+
+/* Education Section */
+.education {
+    padding: 5rem 2rem;
+    background-color: white;
+}
+
+.education-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.education-card {
+    background-color: var(--color-light);
+    padding: 2rem;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.education-card h3 {
+    margin-bottom: 1.5rem;
+    color: var(--color-primary);
+    font-size: 1.2rem;
+}
+
+.education-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.education-name {
+    font-weight: 500;
+}
+
+.education-date {
+    color: var(--color-gray);
+}
+
+/* Contact section */
+.contact {
+    padding: 6rem 2rem;
+    background: transparent;
+    position: relative;
+}
+
+.contact h2 {
+    font-size: clamp(1.9rem, 4.5vw, 2.5rem);
+    color: var(--color-primary);
+    margin-bottom: 1rem;
+    text-align: center;
+    position: relative;
+    display: inline-block;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.contact h2::after {
+    content: '';
+    position: absolute;
+    bottom: -15px;  /* 調整底線位置 */
+    left: 0;
+    width: 100%;
+    height: 4px;
+    background: linear-gradient(to right, var(--color-secondary), var(--color-accent));
+    border-radius: 2px;
+}
+
+.contact-subtitle {
+    text-align: center;
+    color: var(--color-gray);
+    font-size: 1.2rem;
+    margin-bottom: 3rem;
+}
+
+.contact-content {
+    max-width: 800px;
+    margin: 2.5rem auto 0;  /* 減少上方間距 */
+    padding: 2rem;
+}
+
+.contact-info {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.contact-item {
+    display: flex;
+    align-items: center;
+    padding: 1.5rem;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+}
+
+.contact-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.15);
+}
+
+.contact-item i {
+    font-size: 2rem;
+    color: var(--color-secondary);
+    width: 60px;
+    text-align: center;
+}
+
+.contact-item .contact-link {
+    position: relative;
+    text-decoration: none;
+    color: #ff69b4;  /* 改為桃色 */
+    transition: all 0.3s ease;
+    padding: 0.2em 0.4em;
+}
+
+.contact-item .contact-link::before,
+.contact-item .contact-link::after {
+    content: '✧';
+    position: absolute;
+    font-size: 0.8em;
+    opacity: 0;
+    transition: all 0.3s ease;
+    color: #ff69b4;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.contact-item .contact-link::before {
+    left: -1.2em;
+    transform: translate(5px, -50%);
+}
+
+.contact-item .contact-link::after {
+    right: -1.2em;
+    transform: translate(-5px, -50%);
+}
+
+.contact-item .contact-link:hover {
+    transform: translateY(-2px);
+    color: #ff1493;  /* 懸浮時顏色更深 */
+}
+
+.contact-item .contact-link:hover::before {
+    opacity: 1;
+    transform: translate(0, -50%);
+}
+
+.contact-item .contact-link:hover::after {
+    opacity: 1;
+    transform: translate(0, -50%);
+}
+
+.contact-item .contact-link .link-lines {
+    position: absolute;
+    left: 0;
+    bottom: -2px;
+    width: 100%;
+    height: 8px;
+    overflow: hidden;
+}
+
+.contact-item .contact-link .line {
+    position: absolute;
+    left: 0;
+    height: 1px;
+    width: 100%;
+    background: linear-gradient(to right, #ffb6c1, #ff69b4);
+    transition: all 0.4s ease;
+}
+
+.contact-item .contact-link .line1 {
+    bottom: 4px;
+    transform-origin: left;
+    transform: scaleX(0.7) translateX(-100%);
+}
+
+.contact-item .contact-link .line2 {
+    bottom: 1px;
+    transform-origin: right;
+    transform: scaleX(0.5) translateX(100%);
+}
+
+.contact-item .contact-link:hover .line1 {
+    animation: contactSlideLine1 1s infinite;
+}
+
+.contact-item .contact-link:hover .line2 {
+    animation: contactSlideLine2 1s infinite;
+}
+
+@keyframes contactSlideLine1 {
+    0% {
+        transform: scaleX(0.7) translateX(-100%);
+    }
+    50% {
+        transform: scaleX(0.8) translateX(0);
+    }
+    100% {
+        transform: scaleX(0.7) translateX(100%);
+    }
+}
+
+@keyframes contactSlideLine2 {
+    0% {
+        transform: scaleX(0.5) translateX(100%);
+    }
+    50% {
+        transform: scaleX(0.6) translateX(0);
+    }
+    100% {
+        transform: scaleX(0.5) translateX(-100%);
+    }
+}
+
+.contact-link {
+    color: var(--color-dark);
+    text-decoration: none;
+    font-size: 1.2rem;
+    font-weight: 500;
+    transition: color 0.3s ease;
+}
+
+.contact-link:hover {
+    color: var(--color-secondary);
+}
+
+/* Footer */
+footer {
+    padding: 2.5rem;
+    background-color: #2d3436;
+    color: white;
+    text-align: center;
+}
+
+.social-links {
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+    margin-bottom: 1.5rem;
+}
+
+.social-link {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: white;
+    text-decoration: none;
+    padding: 0.8rem 1.5rem;
+    border-radius: 25px;
+    background: rgba(255, 255, 255, 0.1);
+    transition: all 0.3s ease;
+}
+
+.social-link i {
+    font-size: 1.5rem;
+}
+
+.social-text {
+    font-size: 1rem;
+    font-weight: 500;
+}
+
+.social-link:hover {
+    background: white;
+    color: var(--color-secondary);
+    transform: translateY(-3px);
+}
+
+@media (max-width: 768px) {
+    .contact h2 {
+        font-size: 2rem;
+    }
+
+    .contact-subtitle {
+        font-size: 1.1rem;
+    }
+
+    .contact-item {
+        padding: 1.2rem;
+    }
+
+    .contact-item i {
+        font-size: 1.8rem;
+        width: 50px;
+    }
+
+    .contact-link {
+        font-size: 1.1rem;
+    }
+}
+
+/* Common styles */
+section {
+    padding-top: 80px;
+}
+
+section h2 {
+    text-align: center;
+    font-family: 'Italiana', serif;
+    font-size: clamp(1.6rem, 3.6vw, 2.2rem);
+    margin-bottom: 2rem;
+    color: #2d3436;
+    position: relative;
+    letter-spacing: 0.1em;
+    font-weight: 400;
+}
+
+section h2::after {
+    content: '';
+    position: absolute;
+    bottom: -8px;  /* 調整底線位置 */
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60px;
+    height: 1px;
+    background: linear-gradient(to right,
+        rgba(255, 182, 193, 0.8),
+        rgba(255, 105, 180, 0.8)
+    );
+}
+
+section h2::before {
+    content: '✦';
+    position: absolute;
+    top: -20px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 1rem;
+    color: #ff69b4;
+    opacity: 0.6;
+}
+
+.contact h2 {
+    font-size: clamp(1.6rem, 3.6vw, 2.2rem);
+    margin-bottom: 1rem;
+    display: inline-block;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.contact h2::after {
+    height: 1px;
+    background: linear-gradient(to right,
+        rgba(255, 182, 193, 0.8),
+        rgba(255, 105, 180, 0.8)
+    );
+}
+
+.cta-button {
+    display: inline-block;
+    padding: 1rem 2rem;
+    background-color: var(--color-accent);
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+    border: none;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.cta-button:hover {
+    background-color: #0873c4;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    .nav-links {
+        display: none;
+    }
+    
+    .hero-content h1 {
+        font-size: 2.5rem;
+    }
+    
+    .hero-content p {
+        font-size: 1.2rem;
+    }
+    
+    .skills-grid,
+    .project-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .timeline::before {
+        left: 30px;
+    }
+    
+    .timeline-item {
+        padding-left: 60px;
+    }
+    
+    .timeline-item::before {
+        left: 24px;
+    }
+}
+
+/* Scroll Button */
+.scroll-btn {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.8rem;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.1rem;
+    color: #2d3436;
+    text-decoration: none;
+    padding: 1rem;
+    transition: all 0.4s ease;
+    position: relative;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    font-weight: 300;
+    margin-top: 2rem;
+}
+
+.scroll-arrow {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    animation: floatArrow 2s ease-in-out infinite;
+}
+
+.arrow-line {
+    font-size: 1.6em;
+    line-height: 1;
+    background: linear-gradient(
+        45deg,
+        #ffb6c1,
+        #ff69b4,
+        #ff8fab
+    );
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: -5px;
+}
+
+.arrow-head {
+    font-size: 0.8em;
+    line-height: 1;
+    background: linear-gradient(
+        45deg,
+        #ffb6c1,
+        #ff69b4,
+        #ff8fab
+    );
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.scroll-arrow::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+        45deg,
+        rgba(255, 182, 193, 0.2),
+        rgba(255, 105, 180, 0.2),
+        rgba(255, 143, 171, 0.2)
+    );
+    filter: blur(4px);
+    z-index: -1;
+}
+
+@keyframes floatArrow {
+    0%, 100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(10px);
+    }
+}
+
+.scroll-btn:hover .scroll-arrow {
+    animation-duration: 1s;
+}
+
+/* Special Link Styles */
+.link-special {
+    position: relative;
+    display: inline-block;
+    padding: 0.2em 0.4em;
+    font-size: 1.1rem;
+    font-weight: 500;
+    letter-spacing: 0.05em;
+    color: #ff69b4 !important;
+    transition: all 0.3s ease;
+}
+
+.link-lines {
+    position: absolute;
+    left: 0;
+    bottom: -2px;
+    width: 100%;
+    height: 8px;
+    overflow: hidden;
+}
+
+.line {
+    position: absolute;
+    left: 0;
+    height: 2px;
+    width: 100%;
+    background: linear-gradient(to right, #ffb6c1, #ff69b4);
+    transition: all 0.4s ease;
+}
+
+.line1 {
+    bottom: 4px;
+    transform-origin: left;
+    transform: scaleX(0.7) translateX(-100%);
+}
+
+.line2 {
+    bottom: 0;
+    transform-origin: right;
+    transform: scaleX(0.5) translateX(100%);
+}
+
+.link-special:hover {
+    transform: translateY(-2px);
+    color: #ff1493 !important;
+}
+
+.link-special:hover .line1 {
+    animation: slideLine1 1s infinite;
+}
+
+.link-special:hover .line2 {
+    animation: slideLine2 1s infinite;
+}
+
+@keyframes slideLine1 {
+    0% {
+        transform: scaleX(0.7) translateX(-100%);
+    }
+    50% {
+        transform: scaleX(0.8) translateX(0);
+    }
+    100% {
+        transform: scaleX(0.7) translateX(100%);
+    }
+}
+
+@keyframes slideLine2 {
+    0% {
+        transform: scaleX(0.5) translateX(100%);
+    }
+    50% {
+        transform: scaleX(0.6) translateX(0);
+    }
+    100% {
+        transform: scaleX(0.5) translateX(-100%);
+    }
+}
+
+/* Add cute star effect */
+.link-special::before,
+.link-special::after {
+    content: '✧';
+    position: absolute;
+    font-size: 0.8em;
+    opacity: 0;
+    transition: all 0.3s ease;
+    color: #ffb6c1;
+}
+
+.link-special::before {
+    left: -1em;
+    transform: translateX(5px);
+}
+
+.link-special::after {
+    right: -1em;
+    transform: translateX(-5px);
+}
+
+.link-special:hover::before {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+.link-special:hover::after {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+/* See More 按鈕樣式 */
+.see-more-container {
+    text-align: right;
+    margin-top: 3rem;
+    padding-right: 4rem;
+    max-width: 1200px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.see-more-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.8rem;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.2rem;
+    color: #ff69b4;  /* 改為桃色 */
+    text-decoration: none;
+    padding: 0.5rem 1rem;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.see-more-link i {
+    transition: transform 0.3s ease;
+    font-size: 0.9em;
+}
+
+.see-more-link:hover {
+    color: #ff1493;
+}
+
+.see-more-link:hover i {
+    transform: translateX(5px);
+}
+
+.see-more-link::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 1px;
+    background: linear-gradient(to right,
+        rgba(255, 105, 180, 0.3),
+        rgba(255, 182, 193, 0.3)
+    );
+    transform: scaleX(0);
+    transform-origin: right;
+    transition: transform 0.3s ease;
+}
+
+.see-more-link:hover::after {
+    transform: scaleX(1);
+    transform-origin: left;
+}
+
+/* ============================================================
+   新增區塊：hero role line / about lead / project meta+tags/badge
+   / More Work peek rail。全部沿用你原本的色票與字體。
+   ============================================================ */
+
+/* ---- HERO：新增的職稱那一行 ---- */
+.hero-role {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(0.95rem, 2vw, 1.25rem);
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: #2d3436;
+    margin-top: 0.6rem;
+    opacity: 0.85;
+}
+
+/* ---- ABOUT：開頭那句 ---- */
+.about-lead {
+    font-family: 'Italiana', serif;
+    font-size: clamp(1.5rem, 3vw, 2rem);
+    color: #2d3436;
+    margin-bottom: 1.4rem;
+    line-height: 1.25;
+}
+
+/* ---- 專案：獎項 badge ---- */
+.project-badge {
+    display: inline-block;
+    font-family: var(--font-main);
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+    color: var(--color-accent);
+    border: 1px solid rgba(192, 108, 132, 0.4);
+    border-radius: 99px;
+    padding: 0.32rem 0.85rem;
+    margin-bottom: 1rem;
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+a.project-badge:hover {
+    background: var(--color-accent);
+    border-color: var(--color-accent);
+    color: #fff;
+}
+.project-badge--progress {
+    color: var(--color-secondary);
+    border-color: rgba(246, 114, 128, 0.4);
+}
+
+/* ---- 專案：Role / Team / Tools ---- */
+.project-meta {
+    font-size: 0.82rem;
+    line-height: 1.9;
+    color: var(--color-gray);
+    margin-bottom: 1rem;
+}
+.project-meta span {
+    font-weight: 600;
+    color: var(--color-accent);
+    letter-spacing: 0.04em;
+}
+
+/* ---- 專案：標籤 ---- */
+.project-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.45rem;
+    margin-top: 1.1rem;
+}
+.project-tags .tag {
+    font-size: 0.72rem;
+    letter-spacing: 0.03em;
+    color: var(--color-gray);
+    background: rgba(255, 255, 255, 0.55);
+    border: 1px solid rgba(192, 108, 132, 0.22);
+    border-radius: 99px;
+    padding: 0.28rem 0.7rem;
+    white-space: nowrap;
+}
+
+/* ---- VLE 還沒有圖，先用佔位 ---- */
+.image-placeholder {
+    aspect-ratio: 4 / 3;
+    border-radius: 12px;
+    background: linear-gradient(135deg, rgba(248, 177, 149, 0.18), rgba(192, 108, 132, 0.12));
+    border: 1px dashed rgba(192, 108, 132, 0.3);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--color-gray);
+    text-align: center;
+    line-height: 2;
+}
+.image-placeholder small { font-size: 0.7rem; opacity: 0.7; }
+
+/* ============ MORE WORK — PEEK RAIL ============ */
+.rail-head {
+    max-width: 1200px;
+    margin: 5rem auto 1.6rem;
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 1.2rem;
+}
+.rail-title {
+    font-family: 'Italiana', serif;
+    font-size: clamp(1.6rem, 3.4vw, 2.2rem);
+    font-weight: 400;
+    color: #2d3436;
+    letter-spacing: 0.04em;
+}
+.rail-ctl { display: flex; align-items: center; gap: 0.9rem; }
+
+.rail-arw {
+    width: 42px; height: 42px;
+    border-radius: 50%;
+    border: 1px solid rgba(192, 108, 132, 0.35);
+    background: rgba(255, 255, 255, 0.65);
+    color: var(--color-accent);
+    font-size: 0.95rem;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.3s ease;
+}
+.rail-arw:hover:not(:disabled) {
+    background: var(--color-accent);
+    border-color: var(--color-accent);
+    color: #fff;
+    transform: translateY(-2px);
+}
+.rail-arw:disabled { opacity: 0.3; cursor: default; }
+
+.rail-count {
+    font-size: 0.78rem;
+    letter-spacing: 0.14em;
+    color: var(--color-gray);
+    font-variant-numeric: tabular-nums;
+    min-width: 62px;
+}
+.rail-bar {
+    display: block;
+    width: 130px; height: 2px;
+    background: rgba(192, 108, 132, 0.18);
+    border-radius: 2px;
+    overflow: hidden;
+}
+.rail-bar i {
+    display: block; width: 100%; height: 100%;
+    background: linear-gradient(to right, #ffb6c1, var(--color-accent));
+    transform-origin: left;
+    transition: transform 0.45s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.rail-viewport {
+    max-width: 1200px;
+    margin: 0 auto;
+    overflow: hidden;
+    padding: 0.5rem 0 1rem;
+}
+.rail-viewport:focus-visible { outline: 2px solid var(--color-accent); outline-offset: 6px; border-radius: 18px; }
+
+.rail-track {
+    display: flex;
+    gap: 24px;
+    transition: transform 0.55s cubic-bezier(0.4, 0, 0.2, 1);
+}
+/* 關鍵：不是滿版。留 96px 讓下一張露出一角。 */
+.rail-slide {
+    flex: 0 0 calc(100% - 96px);
+    margin: 0 !important;
+    transition: opacity 0.45s ease;
+}
+.rail-slide[aria-hidden="true"] { opacity: 0.4; }
+.rail-slide:hover { transform: none; }
+
+@media (max-width: 968px) {
+    .rail-slide { flex-basis: calc(100% - 64px); }
+    .rail-track { gap: 16px; }
+}
+@media (max-width: 680px) {
+    .rail-slide { flex-basis: calc(100% - 36px); }
+    .rail-head { margin-top: 3.2rem; }
+    .rail-bar  { display: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .rail-track { transition: none; }
+}
+
+/* ============================================================
+   修版：接上面新增區塊的問題
+   ============================================================ */
+
+/* ---- HERO ----
+   ✦ 原本 position:absolute + left:0/right:0，貼的是整個 800px 容器的邊，
+   所以我插進去的職稱行會卡在兩顆星中間。改成 inline-block 之後
+   容器縮到文字寬度，星星就會貼著 "Dare to test." 本身。 */
+.hero-subtitle {
+    display: inline-block;
+    margin: 1.2rem 0 3rem;
+    padding: 0 2.2rem;
+}
+.hero-role {
+    margin-top: 1.4rem;
+    margin-bottom: 0;
+}
+/* 原本 .hero-content p 在 768px 以下被統一壓成 1.2rem，
+   現在有兩個 p，職稱行要單獨處理 */
+@media (max-width: 768px) {
+    .hero-content .hero-role {
+        font-size: 0.8rem;
+        letter-spacing: 0.2em;
+    }
+    .hero-subtitle { padding: 0 1.8rem; }
+}
+
+/* ---- RAIL 內的卡片：解掉繼承來的三層 padding 與影片寬度限制 ---- */
+.rail-slide {
+    padding: 2rem;
+    align-content: center;
+}
+.rail-slide .project-content {
+    padding: 0;                 /* 原本 2rem，跟卡片的 2rem 疊起來變 4rem */
+}
+.rail-slide .project-image {
+    padding: 0;                 /* 同上 */
+    max-width: none;
+    margin: 0;
+    width: 100%;
+    align-self: center;
+}
+.rail-slide .project-video {
+    max-width: 100%;            /* 原本 60%，在窄欄裡只剩不到 300px */
+    width: 100%;
+    height: auto;
+}
+.rail-slide .project-image img {
+    width: 100%;
+    height: auto;
+}
+.rail-slide .project-image-gallery {
+    max-width: none;
+    padding: 0;
+    gap: 1rem;
+}
+/* .project-card:last-child 的 grid-template-areas 會漏進 rail 最後一張，
+   明確重設，四張版型才會一致 */
+.rail-slide:last-child,
+.rail-track .project-card:last-child {
+    grid-template-areas: none;
+}
+.rail-slide:last-child .project-content,
+.rail-slide:last-child .project-image {
+    grid-area: auto;
+}
+/* rail 裡文字量大，字級收一階，卡片才不會過高 */
+.rail-slide .project-title { font-size: 1.5rem; }
+.rail-slide .project-description {
+    font-size: 0.98rem;
+    line-height: 1.75;
+    margin-bottom: 1rem;
+}
+.rail-slide .project-links { margin-top: 1.2rem; }
+
+/* ---- 大卡：同樣的 padding 疊加問題 ---- */
+.project-grid .project-card > .project-content { padding: 0; }
+.project-grid .project-card > .project-image  { padding: 0; max-width: none; margin: 0; width: 100%; }
+.project-grid .project-card { padding: 2.4rem; align-content: center; }
+.project-grid .project-video { max-width: 100%; width: 100%; }
+.project-grid .project-image img { width: 100%; height: auto; }
+.project-grid .project-image-gallery { max-width: none; padding: 0; gap: 1rem; }
+
+/* ---- VLE 佔位框：flex 子元素沒寬度會塌掉 ---- */
+.image-placeholder { width: 100%; }
+
+/* ---- 窄螢幕：卡片收成一欄時，圖片排到上面 ---- */
+@media (max-width: 968px) {
+    .rail-slide { grid-template-columns: 1fr; grid-template-areas: none; }
+    .rail-slide .project-image { order: -1; margin-bottom: 1.2rem; }
+    .project-grid .project-card .project-image { order: -1; margin-bottom: 1.2rem; }
+}
+
+/* ============================================================
+   Capabilities（跟 About Me 同一區）
+   ============================================================ */
+.capabilities {
+    max-width: 1200px;
+    margin: 4rem auto 0;
+}
+.cap-heading {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 0.8rem;
+    font-weight: 400;
+    letter-spacing: 0.26em;
+    text-transform: uppercase;
+    color: var(--color-gray);
+    margin-bottom: 1.4rem;
+}
+.cap-row {
+    display: grid;
+    grid-template-columns: 190px 1fr;
+    gap: 2rem;
+    align-items: baseline;
+    padding: 0.95rem 0;
+    border-top: 1px solid rgba(192, 108, 132, 0.18);
+    margin: 0;
+}
+.cap-row:last-child { border-bottom: 1px solid rgba(192, 108, 132, 0.18); }
+.cap-row dt {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.05rem;
+    letter-spacing: 0.06em;
+    color: #2d3436;
+}
+.cap-row dd {
+    margin: 0;
+    font-size: 0.88rem;
+    line-height: 1.7;
+    color: var(--color-gray);
+    text-align: right;
+}
+@media (max-width: 760px) {
+    .cap-row { grid-template-columns: 1fr; gap: 0.25rem; padding: 0.85rem 0; }
+    .cap-row dd { text-align: left; }
+    .capabilities { margin-top: 2.6rem; }
+}
+
+/* ============================================================
+   框框縮小：卡片、字級、圖片高度都收一階
+   ============================================================ */
+.project-grid { gap: 2rem; }
+
+.project-grid .project-card { padding: 1.9rem; }
+.rail-slide { padding: 1.9rem; }
+
+.project-title            { font-size: 1.45rem; margin-bottom: 0.7rem; }
+.rail-slide .project-title{ font-size: 1.3rem; }
+
+.project-description,
+.rail-slide .project-description {
+    font-size: 0.95rem;
+    line-height: 1.72;
+    margin-bottom: 0.9rem;
+}
+
+.project-meta  { font-size: 0.78rem; line-height: 1.8; margin-bottom: 0.85rem; }
+.project-badge { font-size: 0.66rem; padding: 0.26rem 0.72rem; margin-bottom: 0.85rem; }
+.project-tags  { margin-top: 0.9rem; gap: 0.4rem; }
+.project-tags .tag { font-size: 0.68rem; padding: 0.24rem 0.62rem; }
+
+.project-links,
+.rail-slide .project-links { margin-top: 1.1rem; }
+.project-link.link-special { font-size: 1rem; margin-top: 0; }
+
+/* （裁切規則已移除，見檔尾「圖片尺寸」） */
+.image-placeholder { aspect-ratio: auto; min-height: 240px; max-height: 340px; }
+
+/* About 也收一階 */
+.about-lead        { font-size: clamp(1.35rem, 2.6vw, 1.75rem); margin-bottom: 1.1rem; }
+.about-description { font-size: 0.95rem; line-height: 1.75; margin-bottom: 0.9rem; }
+
+/* Resume 卡片收一階 */
+.timeline-content h3 { font-size: 1.1rem; }
+.experience-details li { font-size: 0.9rem; }
+
+@media (max-width: 968px) {
+    .project-grid .project-image img,
+    .rail-slide .project-image img,
+    .project-grid .project-video,
+    .rail-slide .project-video { max-height: 260px; }
+}
+
+
+/* ---- Scroll Down 移到 hero 底部（原本靠 margin-top 推，
+       把 tagline 刪掉之後就浮到中間了）---- */
+.hero-content { padding-bottom: 0; }
+.scroll-btn {
+    /* 只改位置，字級與顏色維持你原本的 1.1rem / #2d3436 */
+    position: absolute;
+    left: 50%;
+    bottom: 3.2rem;
+    transform: translateX(-50%);
+    margin-top: 0;
+    z-index: 2;
+}
+@media (max-width: 680px) {
+    .scroll-btn { bottom: 2rem; }
+}
+
+/* hero 只剩 h1 + 職稱，間距重抓 */
+.hero-role { margin-top: 1.6rem; margin-bottom: 0; letter-spacing: 0.3em; }
+
+/* ---- Capabilities：加圖標 ---- */
+.cap-row dt {
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+}
+.cap-row dt i {
+    font-size: 0.85rem;
+    color: var(--color-accent);
+    width: 1.1rem;
+    text-align: center;
+    flex: none;
+}
+/* 工具類的用 pill，一眼掃得到 */
+.cap-tools {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.45rem;
+    justify-content: flex-end;
+}
+.cap-tool {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.42rem;
+    font-size: 0.78rem;
+    color: #2d3436;
+    background: rgba(255, 255, 255, 0.6);
+    border: 1px solid rgba(192, 108, 132, 0.22);
+    border-radius: 99px;
+    padding: 0.3rem 0.72rem;
+    white-space: nowrap;
+    transition: all 0.3s ease;
+}
+.cap-tool i { font-size: 0.8rem; color: var(--color-accent); }
+.cap-tool:hover {
+    background: rgba(255, 255, 255, 0.9);
+    border-color: rgba(192, 108, 132, 0.45);
+    transform: translateY(-2px);
+}
+@media (max-width: 760px) {
+    .cap-tools { justify-content: flex-start; }
+}
+
+/* ============================================================
+   文字顏色統一
+   原則：裝飾（漸層、光暈、底線、圓點）維持你原本的粉嫩色不動；
+        只有「要被讀的字」換成同一支色票的深化版。
+        #f8b195 → #a85070（同一支玫瑰，壓深到 5.2:1）
+        #8d7b68 → #6f6055（同一支暖灰，壓深到 6.0:1）
+   ============================================================ */
+:root {
+    --ink-title: #a85070;   /* 所有標題／連結／強調   5.19:1 on white */
+    --ink-body:  #6f6055;   /* 所有內文               6.03:1 on white */
+    --ink-meta:  #7d6f63;   /* 日期、標籤、次要資訊   5.0:1  on white */
+}
+
+/* ---- 區塊大標 ---- */
+.projects h2,
+.about h2,
+.experience h2,
+.contact h2,
+.skills h2      { color: var(--ink-title); }
+
+/* ---- 專案卡 ---- */
+.project-title  { color: var(--ink-title); }
+.project-description { color: var(--ink-body); }
+.project-meta   { color: var(--ink-meta); }
+.project-meta span { color: var(--ink-title); }
+.project-tags .tag { color: var(--ink-meta); }
+.project-badge  { color: var(--ink-title); border-color: rgba(168, 80, 112, 0.38); }
+a.project-badge:hover { background: var(--ink-title); border-color: var(--ink-title); color: #fff; }
+.project-badge--progress { color: var(--ink-title); border-color: rgba(168, 80, 112, 0.38); }
+
+/* ---- 連結：原本 #ff69b4 只有 2.65:1 ---- */
+.link-special,
+.project-link.link-special { color: var(--ink-title) !important; }
+.link-special:hover,
+.project-link.link-special:hover { color: #8e4260 !important; }
+.see-more-link  { color: var(--ink-title); }
+.contact-link   { color: var(--ink-title); }
+
+/* ---- Rail ---- */
+.rail-title     { color: #2d3436; }
+.rail-count     { color: var(--ink-meta); }
+.rail-arw       { color: var(--ink-title); border-color: rgba(168, 80, 112, 0.38); }
+.rail-arw:hover:not(:disabled) { background: var(--ink-title); border-color: var(--ink-title); color: #fff; }
+.rail-bar i     { background: linear-gradient(to right, #f6c6d5, var(--ink-title)); }
+
+/* ---- About + Capabilities ---- */
+.about-lead     { color: #2d3436; }
+.about-description { color: var(--ink-body); }
+.cap-heading    { color: var(--ink-meta); }
+.cap-row dt     { color: #2d3436; }
+.cap-row dt i   { color: var(--ink-title); }
+.cap-row dd     { color: var(--ink-body); }
+.cap-tool       { color: #2d3436; border-color: rgba(168, 80, 112, 0.24); }
+.cap-tool i     { color: var(--ink-title); }
+.cap-tool:hover { border-color: rgba(168, 80, 112, 0.5); }
+.cap-row        { border-top-color: rgba(168, 80, 112, 0.16); }
+.cap-row:last-child { border-bottom-color: rgba(168, 80, 112, 0.16); }
+
+/* ---- Resume ---- */
+.timeline-content h3 { color: var(--ink-title); }
+.timeline-content h4 { color: var(--ink-body); }
+.timeline-date       { color: var(--ink-meta); }
+.experience-details li { color: var(--ink-body); }
+
+/* ---- Hero + Nav：hero 是彩色底，用深墨最穩 ---- */
+.hero-role      { color: #2d3436; opacity: 0.8; }
+.scroll-btn     { color: #2d3436; }
+.nav-link:hover { color: var(--ink-title); }
+.nav-link::before, .nav-link::after { color: var(--ink-title); }
+
+/* ---- ✦ 星星移到職稱那行 ----
+   原本掛在 .hero-subtitle 上，tagline 刪掉就跟著消失。
+   效果完全沿用你原本 .hero-subtitle::before/::after 的寫法。 */
+.hero-role {
+    display: inline-block;
+    position: relative;
+    padding: 0 2.4rem;
+}
+.hero-role::before,
+.hero-role::after {
+    content: '✦';
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: linear-gradient(45deg,
+        #ffb6c1,   /* 淺粉紅 */
+        #ff69b4,   /* 亮粉紅 */
+        #ff8fab    /* 桃粉色 */
+    );
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-size: 1.5em;
+    letter-spacing: 0;
+    animation: starTwinkle 2s ease-in-out infinite;
+    text-shadow:
+        0 0 5px rgba(255, 182, 193, 0.5),
+        0 0 10px rgba(255, 105, 180, 0.3),
+        0 0 15px rgba(255, 143, 171, 0.2);
+}
+.hero-role::before { left: 0; }
+.hero-role::after  { right: 0; }
+
+@media (max-width: 680px) {
+    .hero-role { padding: 0 1.9rem; }
+    .hero-role::before, .hero-role::after { font-size: 1.3em; }
+}
+
+/* ============================================================
+   字體：還原你 old version 的實際外觀
+   ------------------------------------------------------------
+   你原本的 @import 放在第 27 行（前面已有 3 個規則區塊），
+   CSS 規格要求 @import 必須在所有規則之前，所以瀏覽器丟棄了它
+   → Italiana / Cormorant Garamond 從來沒載入過，
+     全部 fallback 到系統 serif（Mac 上是 Times）。
+   那才是你 old version 實際看到的樣子。
+
+   下面把它明確寫出來，而不是靠一個 bug 產生。
+   想改用真正的 Italiana / Cormorant：把這整段刪掉即可。
+   ============================================================ */
+.hero-content h1,
+.project-title,
+.rail-title,
+.about-lead,
+.timeline-content h3,
+.image-placeholder {
+    font-family: Times, 'Times New Roman', 'Nimbus Roman', serif;
+}
+
+.nav-link,
+.scroll-btn,
+.hero-role,
+.project-link.link-special,
+.cap-heading,
+.cap-row dt,
+.contact h2,
+.see-more-link {
+    font-family: Times, 'Times New Roman', 'Nimbus Roman', serif;
+}
+
+/* ---- resume.html ---- */
+.resume-hero {
+    padding: 12rem 2rem 3rem;
+    text-align: center;
+    background: transparent;
+}
+.resume-h1 {
+    font-family: Times, 'Times New Roman', serif;
+    font-size: clamp(3rem, 9vw, 5.5rem);
+    font-weight: 400;
+    line-height: 1;
+    letter-spacing: 0.05em;
+    background: linear-gradient(45deg, #2d3436 20%, #a18cd1 40%, #fbc2eb 60%, #2d3436 80%);
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: shimmerText 6s linear infinite;
+}
+.resume-hero .hero-role { margin-top: 1.4rem; }
+.nav-link--current { opacity: 0.55; }
+.experience { padding-top: 2rem; }
+
+/* ============================================================
+   圖片尺寸修正
+   ------------------------------------------------------------
+   之前我把影片的 max-width 從你原本的 60% 改成 100%，又加了
+   object-fit: cover + max-height，等於先拉大再裁掉。
+   兩支 demo 其實都是直式手機錄影（886×1920、1178×2556），
+   所以要用「高度」限制，不是寬度。照片是橫式，用寬度限制。
+   一律 contain，不再裁切。
+   ============================================================ */
+
+/* ---- 橫式照片：填滿欄寬，高度自然，不裁 ---- */
+.project-grid .project-image img,
+.rail-slide .project-image img {
+    width: 100%;
+    height: auto;
+    max-height: none;
+    object-fit: contain;
+    border-radius: 10px;
+}
+
+/* ---- 直式影片：用高度限制，寬度自己跟著走 ---- */
+.project-grid .project-video,
+.rail-slide .project-video,
+.project-video {
+    width: auto;
+    height: auto;
+    max-width: 100%;
+    max-height: 460px;
+    object-fit: contain;
+    border-radius: 10px;
+    margin: 0 auto;
+    display: block;
+}
+
+/* ---- Alpha 的兩張並排圖 ---- */
+.project-image-gallery img {
+    width: 100%;
+    height: auto;
+    max-height: none;
+    object-fit: contain;
+}
+
+/* ---- VLE 佔位框跟著照片的比例 ---- */
+.image-placeholder { min-height: 260px; max-height: none; }
+
+@media (max-width: 968px) {
+    .project-grid .project-video,
+    .rail-slide .project-video,
+    .project-video { max-height: 380px; }
+    .project-grid .project-image img,
+    .rail-slide .project-image img { max-height: none; }
+}
+
+/* ---- 整頁光暈層：對應 hero::before 的 glowPulse，讓底部也有呼吸感 ---- */
+body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    background:
+        radial-gradient(circle at 22% 18%, rgba(255,255,255,0.16) 0%, transparent 45%),
+        radial-gradient(circle at 78% 74%, rgba(255,255,255,0.13) 0%, transparent 48%),
+        radial-gradient(circle at 50% 50%, rgba(255,255,255,0.09) 0%, transparent 65%);
+    mix-blend-mode: overlay;
+    animation: glowPulse 12s ease-in-out infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+    body::before { animation: none; }
+}
+
+/* ============================================================
+   卡片：標題／內文位置統一 + rail 縮小
+   ------------------------------------------------------------
+   原本 .project-card 是 align-items: center，所以每張卡的文字
+   會依內容長短垂直置中 → 標題高度全部不一樣。改成 start，
+   標題一律從卡片頂端開始。
+   ============================================================ */
+.project-grid .project-card,
+.rail-slide {
+    align-items: start;
+    align-content: start;
+}
+/* 圖片那欄維持垂直置中，看起來才不會頭重腳輕 */
+.project-grid .project-card > .project-image,
+.rail-slide > .project-image,
+.project-grid .project-card > .project-image-gallery,
+.rail-slide > .project-image-gallery {
+    align-self: center;
+}
+
+/* rail 四張等高，切換時卡片不會忽高忽低 */
+.rail-track { align-items: stretch; }
+
+/* ---- rail 卡片整體縮小 ---- */
+.rail-slide {
+    padding: 1.5rem;
+    gap: 1.6rem;
+}
+.rail-slide .project-title {
+    font-size: 1.15rem;
+    margin-bottom: 0.55rem;
+    line-height: 1.3;
+}
+.rail-slide .project-meta {
+    font-size: 0.72rem;
+    line-height: 1.7;
+    margin-bottom: 0.7rem;
+}
+.rail-slide .project-description {
+    font-size: 0.86rem;
+    line-height: 1.62;
+    margin-bottom: 0.7rem;
+}
+.rail-slide .project-tags { margin-top: 0.75rem; gap: 0.35rem; }
+.rail-slide .project-tags .tag { font-size: 0.64rem; padding: 0.2rem 0.55rem; }
+.rail-slide .project-links { margin-top: 0.9rem; }
+.rail-slide .project-link.link-special { font-size: 0.9rem; }
+
+/* rail 裡的圖再壓一階 */
+.rail-slide .project-video { max-height: 340px; }
+.rail-slide .project-image img { max-height: 300px; object-fit: contain; }
+.rail-slide .project-image-gallery { gap: 0.7rem; }
+.rail-slide .project-image-gallery img { max-height: 145px; object-fit: contain; }
+
+/* 橫滑時交給 JS 處理，瀏覽器只管垂直 */
+.rail-viewport { touch-action: pan-y; }
+
+@media (max-width: 968px) {
+    .rail-slide { padding: 1.2rem; gap: 1rem; }
+    .rail-slide .project-video { max-height: 300px; }
+    .rail-slide .project-image img { max-height: 220px; }
+}
+
+/* badge 佔位：讓沒有 badge 的卡片標題也從同一個高度開始 */
+.project-badge--spacer { visibility: hidden; pointer-events: none; }
+/* badge 一律 block，才會穩定佔一整行 */
+.project-badge { display: inline-block; }
+.project-content > .project-badge { margin-bottom: 0.85rem; }
+
+/* ============================================================
+   顏色重配：把偏紫的 #a85070 換成暖玫瑰
+   #a85070 色相 338° 且飽和低 → 讀起來像藕紫，跟你的粉調不搭。
+   改用 #9b4654（色相 350°，跟你 --color-secondary #f67280 的
+   354° 幾乎同一支），只是壓深到 6.2:1 讓字讀得到。
+   ============================================================ */
+:root {
+    --ink-title: #9b4654;   /* 標題／強調  暖玫瑰  6.2:1 */
+    --ink-body:  #6f6055;
+    --ink-meta:  #7d6f63;
+    --pink:      #ff69b4;   /* 你原本的粉，給 View Project 用 */
+}
+
+/* View Project 等連結：改回你原本的粉 */
+.link-special,
+.project-link.link-special,
+.see-more-link {
+    color: var(--pink) !important;
+}
+.link-special:hover,
+.project-link.link-special:hover,
+.see-more-link:hover {
+    color: #ff1493 !important;
+}
+
+/* icon 一律跟著暖玫瑰，不再是紫 */
+.cap-row dt i,
+.cap-tool i,
+.contact-item i,
+.skill-icon { color: var(--ink-title); }
+.cap-tool { border-color: rgba(155, 70, 84, 0.24); }
+.cap-tool:hover { border-color: rgba(155, 70, 84, 0.5); }
+.cap-row { border-top-color: rgba(155, 70, 84, 0.16); }
+.cap-row:last-child { border-bottom-color: rgba(155, 70, 84, 0.16); }
+.project-badge { border-color: rgba(155, 70, 84, 0.35); }
+.project-badge--progress { border-color: rgba(155, 70, 84, 0.35); }
+a.project-badge:hover { background: var(--ink-title); border-color: var(--ink-title); }
+.rail-arw { border-color: rgba(155, 70, 84, 0.35); }
+.rail-arw:hover:not(:disabled) { background: var(--ink-title); border-color: var(--ink-title); }
+.rail-bar i { background: linear-gradient(to right, #ffb6c1, var(--ink-title)); }
+
+/* ============================================================
+   Contact：標題改圖標、整區縮小
+   ============================================================ */
+.contact { padding: 4rem 2rem 3rem; }
+.contact-title {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.55rem;
+    margin-bottom: 2rem;
+    font-size: 1.4rem;
+    line-height: 1.2;
+}
+.contact-title i { font-size: 1.5rem; color: var(--ink-title); }
+.contact-title span {
+    font-family: Times, 'Times New Roman', serif;
+    font-size: 1.4rem;
+    font-weight: 400;
+    letter-spacing: 0.06em;
+    color: var(--ink-title);
+}
+.contact-content { max-width: 460px; }
+.contact-info { gap: 0.5rem; }
+.contact-item {
+    gap: 0.8rem;
+    padding: 0.7rem 0;
+    border-bottom: 1px solid rgba(155, 70, 84, 0.14);
+}
+.contact-item i { font-size: 0.85rem; width: 18px; }
+.contact-item .contact-link { font-size: 0.88rem; }
+
+footer { padding: 3rem 2rem 2.2rem; margin-top: 2rem; }
+.social-links { gap: 2rem; margin-bottom: 1.5rem; }
+.social-link i { font-size: 1rem; }
+.social-text { font-size: 0.62rem; }
+
+/* ============================================================
+   區塊大標：套用跟 SHERLY 一樣的漸層文字
+   完全沿用你 .hero-content h1 的那組漸層與 shimmerText 動畫
+   ============================================================ */
+.about h2,
+.projects h2,
+.experience h2,
+.contact .contact-title span,
+.rail-title,
+.about-lead,
+.cap-heading {
+    background: linear-gradient(45deg,
+        #2d3436 20%,
+        #a18cd1 40%,
+        #fbc2eb 60%,
+        #2d3436 80%
+    );
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: transparent;
+    animation: shimmerText 6s linear infinite;
+}
+
+/* 小字的漸層會糊掉，讓 cap-heading 走短一點的色域 */
+.cap-heading {
+    background: linear-gradient(45deg, #2d3436 10%, #a18cd1 55%, #2d3436 95%);
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    background-clip: text;
+}
+
+/* h2 底下那條裝飾線也跟著漸層走 */
+.about-text h2::after {
+    background: linear-gradient(to right, #a18cd1, #fbc2eb);
+    height: 2px;
+}
+
+/* contact 的圖標維持實色，跟漸層字對比才清楚 */
+.contact-title i { color: var(--ink-title); }
+
+@media (prefers-reduced-motion: reduce) {
+    .about h2, .projects h2, .experience h2,
+    .contact .contact-title span, .rail-title,
+    .about-lead, .cap-heading { animation: none; }
+}
+
+/* ============================================================
+   最終配色
+   ------------------------------------------------------------
+   粉  = 你 old version 的桃粉 #ff69b4 / hover #ff1493
+        只用在連結、badge、rail 箭頭這些「可互動」的東西
+   黑灰 = 沒有漸層反射的標題與所有 icon
+   漸層 = 只有 About Me / Selected Work / More Work / Get in touch
+   ============================================================ */
+:root {
+    --peach:      #ff69b4;   /* 你原本的桃粉 */
+    --peach-dark: #ff1493;   /* hover */
+    --ink-strong: #2d3436;   /* 沒反射的標題        10.8:1 */
+    --ink-soft:   #5e6472;   /* icon、次要標題       5.9:1 */
+    --ink-title:  #2d3436;   /* 覆蓋掉先前的暗紫 */
+}
+
+/* ---- 沒有漸層的標題 → 黑 ---- */
+.project-title,
+.timeline-content h3,
+.cap-row dt,
+.rail-count { color: var(--ink-strong); }
+.timeline-content h4 { color: var(--ink-soft); }
+
+/* ---- 所有 icon → 灰 ---- */
+.cap-row dt i,
+.cap-tool i,
+.contact-item i,
+.skill-icon,
+.contact-title i,
+.project-link i,
+.see-more-link i { color: var(--ink-soft); }
+
+/* ---- 桃粉：只留給可互動的東西 ---- */
+.link-special,
+.project-link.link-special,
+.see-more-link,
+.contact-item .contact-link:hover,
+.nav-link:hover { color: var(--peach) !important; }
+.link-special:hover,
+.project-link.link-special:hover,
+.see-more-link:hover { color: var(--peach-dark) !important; }
+.nav-link::before, .nav-link::after { color: var(--peach); }
+
+.project-badge,
+.project-badge--progress {
+    color: var(--peach);
+    border-color: rgba(255, 105, 180, 0.42);
+}
+a.project-badge:hover {
+    background: var(--peach);
+    border-color: var(--peach);
+    color: #fff;
+}
+
+.rail-arw {
+    color: var(--ink-strong);
+    border-color: rgba(45, 52, 54, 0.22);
+}
+.rail-arw:hover:not(:disabled) {
+    background: var(--ink-strong);
+    border-color: var(--ink-strong);
+    color: #fff;
+}
+.rail-bar i { background: linear-gradient(to right, #ffb6c1, var(--peach)); }
+
+/* ---- 中性化的線與框 ---- */
+.cap-row { border-top-color: rgba(45, 52, 54, 0.13); }
+.cap-row:last-child { border-bottom-color: rgba(45, 52, 54, 0.13); }
+.cap-tool { border-color: rgba(45, 52, 54, 0.15); color: var(--ink-strong); }
+.cap-tool:hover { border-color: rgba(255, 105, 180, 0.5); }
+.contact-item { border-bottom-color: rgba(45, 52, 54, 0.13); }
+.project-tags .tag { border-color: rgba(45, 52, 54, 0.15); color: var(--ink-body); }
+.project-meta span { color: var(--ink-soft); }
+.project-title::after {
+    background: linear-gradient(to right, rgba(255,105,180,.35), rgba(255,182,193,.35));
+}
+
+/* ============================================================
+   三張大卡的標題對齊
+   badge 文字長度不同（35 / 37 / 11 字），卡片變窄時長的會換兩行、
+   短的只有一行，標題就錯開。給 badge 固定高度 + 不換行。
+   ============================================================ */
+.project-content > .project-badge {
+    display: inline-flex;
+    align-items: center;
+    height: 1.75rem;              /* 固定，三張卡預留完全一樣的空間 */
+    padding: 0 0.72rem;
+    margin: 0 0 0.9rem;
+    white-space: nowrap;
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    vertical-align: top;
+}
+/* 佔位的那個只是為了撐高度 */
+.project-badge--spacer {
+    visibility: hidden;
+    border-color: transparent !important;
+    background: none !important;
+}
+/* 標題本身不要有額外的上緣位移 */
+.project-grid .project-title { margin-top: 0; }
+
+/* 窄螢幕：badge 字縮小，繼續維持單行 */
+@media (max-width: 1100px) {
+    .project-content > .project-badge { font-size: 0.6rem; letter-spacing: 0.06em; }
+}
+@media (max-width: 620px) {
+    .project-content > .project-badge {
+        font-size: 0.56rem;
+        height: 1.6rem;
+        padding: 0 0.6rem;
+    }
+}
+
+
+/* ============================================================
+   Contact：三格
+   ============================================================ */
+.contact { padding: 4rem 2rem 3rem; }
+.contact-content { max-width: 940px; }
+.contact-cards {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.25rem;
+}
+
+.contact-card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 2.1rem 1.1rem 1.8rem;
+    border-radius: 15px;
+    background: rgba(255, 255, 255, 0.55);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border: 1px solid rgba(255, 255, 255, 0.7);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.06);
+    text-decoration: none;
+    overflow: hidden;
+    transition: transform 0.35s ease, box-shadow 0.35s ease, border-color 0.35s ease;
+}
+/* hover 時從底部長出一條桃粉線 */
+.contact-card::after {
+    content: '';
+    position: absolute;
+    left: 0; right: 0; bottom: 0;
+    height: 2px;
+    background: linear-gradient(to right, #ffb6c1, #ff69b4);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.4s ease;
+}
+.contact-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 18px 44px rgba(0, 0, 0, 0.1);
+    border-color: rgba(255, 255, 255, 0.95);
+}
+.contact-card:hover::after { transform: scaleX(1); }
+
+/* 圖標放在淡色圓底裡 */
+.contact-card i {
+    width: 44px;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    font-size: 1rem;
+    color: var(--ink-soft);
+    background: rgba(45, 52, 54, 0.05);
+    margin-bottom: 1rem;
+    transition: all 0.35s ease;
+}
+.contact-card:hover i {
+    color: #fff;
+    background: var(--peach);
+    transform: scale(1.06);
+}
+
+.contact-card-label {
+    font-family: Times, 'Times New Roman', serif;
+    font-size: 0.62rem;
+    letter-spacing: 0.26em;
+    text-transform: uppercase;
+    color: var(--ink-meta);
+    margin-bottom: 0.42rem;
+}
+.contact-card-value {
+    font-size: 0.84rem;
+    line-height: 1.4;
+    color: var(--ink-strong);
+    word-break: normal;
+    overflow-wrap: anywhere;
+    transition: color 0.3s ease;
+}
+.contact-card:hover .contact-card-value { color: var(--peach); }
+
+/* email 最長，字級單獨收一階讓它單行 */
+.contact-card:nth-child(2) .contact-card-value { font-size: 0.76rem; letter-spacing: -0.01em; }
+
+@media (max-width: 900px) {
+    .contact-cards { grid-template-columns: 1fr; gap: 0.7rem; }
+    .contact-card {
+        flex-direction: row;
+        align-items: center;
+        text-align: left;
+        padding: 0.95rem 1.2rem;
+        gap: 1rem;
+    }
+    .contact-card i { margin-bottom: 0; width: 38px; height: 38px; flex: none; }
+    .contact-card-label { display: none; }
+    .contact-card-value { font-size: 0.9rem; }
+    .contact-card:nth-child(2) .contact-card-value { font-size: 0.85rem; }
+}
+
+footer { padding: 3rem 2rem 2.2rem; margin-top: 2rem; }
+.social-links { gap: 2rem; margin-bottom: 1.5rem; }
+.social-link i { font-size: 1rem; }
+.social-text { font-size: 0.62rem; }
+
+/* ============================================================
+   大卡標題列：標題在左、badge 在右
+   badge 移到同一行之後，三張卡的標題自然對齊，
+   不再需要之前那個隱形佔位。
+   ============================================================ */
+.project-head {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 0.9rem;
+    min-height: 1.75rem;          /* 沒有 badge 的卡片也預留同樣高度 */
+}
+.project-head .project-title {
+    margin: 0;
+    flex: 1 1 auto;
+}
+.project-head .project-badge {
+    flex: 0 0 auto;
+    margin: 0;
+    align-self: flex-start;
+    margin-top: 0.15rem;          /* 跟標題第一行的視覺基線對齊 */
+}
+
+/* 窄一點就讓 badge 掉到標題下面，不要硬擠 */
+@media (max-width: 1180px) {
+    .project-head {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.55rem;
+    }
+    .project-head .project-badge { margin-top: 0; }
+}
+
+/* ============================================================
+   專案標題：做出「標題感」
+   ------------------------------------------------------------
+   問題是階層太弱：1.45rem 的黑字配 0.95rem 的黑字，只差 1.5 倍，
+   顏色又一樣，所以讀起來像粗一點的內文。
+   下面把尺寸拉開到 2 倍以上、加字距、底線加重、上下留白拉開。
+   ============================================================ */
+.project-grid .project-title {
+    font-family: Times, 'Times New Roman', serif;
+    font-size: clamp(1.65rem, 2.7vw, 2.1rem);   /* 內文的 2.2 倍 */
+    font-weight: 400;
+    line-height: 1.12;
+    letter-spacing: 0.015em;
+    color: var(--ink-strong);
+    padding-bottom: 0.45rem;
+    margin: 0;
+}
+/* 底線加重，並且只在標題文字底下 */
+.project-grid .project-title::after {
+    height: 2px;
+    bottom: 0;
+    background: linear-gradient(to right, #ff69b4, rgba(255, 182, 193, 0.25));
+    border-radius: 2px;
+}
+
+/* rail 裡的卡片小一階，但用同一套語彙 */
+.rail-slide .project-title {
+    font-family: Times, 'Times New Roman', serif;
+    font-size: 1.32rem;
+    font-weight: 400;
+    line-height: 1.18;
+    letter-spacing: 0.015em;
+    padding-bottom: 0.38rem;
+    margin: 0 0 0.15rem;
+}
+.rail-slide .project-title::after {
+    height: 2px;
+    bottom: 0;
+    background: linear-gradient(to right, #ff69b4, rgba(255, 182, 193, 0.25));
+    border-radius: 2px;
+}
+
+/* 標題列與底下 meta 之間拉開，標題才不會被黏住 */
+.project-head { margin-bottom: 1.15rem; }
+.project-grid .project-meta { margin-bottom: 1.05rem; }
+.rail-slide .project-meta { margin-top: 0.6rem; }
+
+@media (max-width: 620px) {
+    .project-grid .project-title { font-size: 1.5rem; }
+    .rail-slide .project-title { font-size: 1.2rem; }
+}
+
+/* ============================================================
+   Resume 時間軸：圓點改成 ✦
+   用的是跟 .hero-role::before/::after 完全同一組粉紅漸層剪字
+   + starTwinkle 動畫 + 三層光暈。
+   ============================================================ */
+.timeline-item::before {
+    content: '✦';
+    left: 39px;
+    top: -0.25rem;
+    width: auto;
+    height: auto;
+    border: none;
+    border-radius: 0;
+    background: linear-gradient(45deg,
+        #ffb6c1,   /* 淺粉紅 */
+        #ff69b4,   /* 亮粉紅 */
+        #ff8fab    /* 桃粉色 */
+    );
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    box-shadow: none;
+    font-size: 1.5rem;
+    line-height: 1;
+    animation: starTwinkle 2s ease-in-out infinite;
+    text-shadow:
+        0 0 5px rgba(255, 182, 193, 0.5),
+        0 0 10px rgba(255, 105, 180, 0.3),
+        0 0 15px rgba(255, 143, 171, 0.2);
+    z-index: 1;
+}
+
+/* 每顆星錯開閃爍節奏，才不會整排同時亮 */
+.timeline-item:nth-child(2)::before { animation-delay: .35s; }
+.timeline-item:nth-child(3)::before { animation-delay: .7s; }
+.timeline-item:nth-child(4)::before { animation-delay: 1.05s; }
+.timeline-item:nth-child(5)::before { animation-delay: 1.4s; }
+.timeline-item:nth-child(6)::before { animation-delay: 1.75s; }
+
+/* 中間那條線淡一點，讓星星成為主角 */
+.timeline::before {
+    background: linear-gradient(to bottom,
+        transparent,
+        rgba(255, 105, 180, 0.28) 5%,
+        rgba(255, 105, 180, 0.28) 95%,
+        transparent
+    );
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .timeline-item::before { animation: none; }
+}
+@media (max-width: 768px) {
+    .timeline-item::before { left: 19px; font-size: 1.3rem; }
+}
+
+/* ---- Footer：只留版權一行 ---- */
+footer {
+    background: var(--ink-strong);
+    color: #ede9ea;
+    padding: 2.2rem 2rem;
+    margin-top: 2rem;
+    text-align: center;
+}
+.copyright {
+    font-size: 0.75rem;
+    letter-spacing: 0.04em;
+    color: rgba(237, 233, 234, 0.6);
+    margin: 0;
+}
+
+/* ---- 所有 icon 改回桃粉，跟 Scroll Down 的箭頭同一支 ---- */
+.cap-row dt i,
+.cap-tool i,
+.contact-title i,
+.contact-card i,
+.project-link i,
+.see-more-link i,
+.skill-icon {
+    color: var(--peach);
+}
+/* Contact 三格的圓底：平常淡粉，hover 才實心 */
+.contact-card i {
+    background: rgba(255, 105, 180, 0.10);
+}
+.contact-card:hover i {
+    color: #fff;
+    background: var(--peach);
+}
+
+/* ============================================================
+   區塊大標漸層：日落（降飽和版）
+   #e64796（粉）→ #f5865f（珊瑚）→ #f8c47c（金）→ #e64796
+   三個色停都從 100% 飽和降到 76%，柔和但仍然明亮。
+   完全不碰紫，跟 hero 的 #2d3436→#a18cd1→#fbc2eb 對比最強。
+   ============================================================ */
+.about h2,
+.projects h2,
+.experience h2,
+.contact .contact-title span,
+.rail-title,
+.about-lead {
+    background: linear-gradient(45deg,
+        #e64796 12%,
+        #f5865f 42%,
+        #f8c47c 62%,
+        #e64796 88%
+    );
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: transparent;
+    animation: shimmerText 6s linear infinite;
+}
+
+/* Capabilities 是小字又有字距，色域收窄才不會糊掉 */
+.cap-heading {
+    background: linear-gradient(45deg, #e64796 15%, #f5865f 55%, #e64796 92%);
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: transparent;
+    animation: shimmerText 6s linear infinite;
+}
+
+/* About 標題底下那條裝飾線跟著玫瑰金 */
+.about-text h2::after {
+    background: linear-gradient(to right, #e64796, #f8c47c);
+    height: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .about h2, .projects h2, .experience h2,
+    .contact .contact-title span, .rail-title,
+    .about-lead, .cap-heading { animation: none; }
+}
+
+/* ---- icon / 連結的桃粉：維持你原本的 #ff69b4 ---- */
+:root {
+    --peach:      #ff69b4;
+    --peach-dark: #ff1493;
+}
+
+/* 一張卡兩個連結時的間距與換行 */
+.project-links { flex-wrap: wrap; row-gap: 0.5rem; column-gap: 1.4rem; }
+
+/* ============================================================
+   Alpha 的兩張並排圖：不要再被高度硬壓
+   1190×841 的圖在 width:100% + max-height:145px 之下，
+   實際只畫出 205×145，兩側全是空白，看起來像沒圖。
+   改成兩欄並排，各佔一半寬，高度自然。
+   ============================================================ */
+.rail-slide .project-image-gallery,
+.project-grid .project-image-gallery {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.7rem;
+    max-width: none;
+    padding: 0;
+    align-content: center;
+}
+.rail-slide .project-image-gallery img,
+.project-grid .project-image-gallery img {
+    width: 100%;
+    height: auto;
+    max-height: none;
+    object-fit: contain;
+    border-radius: 8px;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+}
+
+@media (max-width: 620px) {
+    .rail-slide .project-image-gallery,
+    .project-grid .project-image-gallery { grid-template-columns: 1fr; gap: 0.6rem; }
+}
+
+/* Alpha 的兩張圖改回上下排列，各佔滿寬 */
+.rail-slide .project-image-gallery,
+.project-grid .project-image-gallery {
+    grid-template-columns: 1fr;
+    gap: 0.9rem;
+}
+
+/* rail 可以拖曳 */
+.rail-viewport { cursor: grab; }
+.rail-viewport.is-dragging { cursor: grabbing; }
+.rail-viewport.is-dragging .rail-track { transition: none; }
+.rail-viewport.is-dragging img,
+.rail-viewport.is-dragging video { pointer-events: none; }
+
+/* ============================================================
+   Rail：影片放大 + 沒有 View Project 的卡片不要留空
+   ------------------------------------------------------------
+   兩支 demo 都是 1:2.17 的直式（886×1920、1178×2556），
+   高度 340px 換算寬度只有 157px。拉到 580px 才有 267px 寬。
+   直式影片不吃寬度，所以把媒體欄收窄、文字欄放寬。
+   ============================================================ */
+.rail-slide {
+    grid-template-columns: 1.28fr 0.72fr;
+    align-items: center;              /* 文字與影片垂直置中，缺 CTA 的卡片就不會下方留一塊空白 */
+    gap: 1.8rem;
+}
+.rail-slide > .project-content {
+    align-self: center;
+}
+.rail-slide .project-video {
+    max-height: 580px;
+    width: auto;
+    max-width: 100%;
+    margin: 0 auto;
+    border-radius: 14px;
+    box-shadow: 0 12px 34px rgba(0, 0, 0, 0.13);
+}
+/* 有圖的那兩張（Photography / Alpha）維持原本比例即可 */
+.rail-slide .project-image img { max-height: 420px; }
+
+@media (max-width: 968px) {
+    .rail-slide {
+        grid-template-columns: 1fr;
+        align-items: start;
+        gap: 1.2rem;
+    }
+    .rail-slide .project-video { max-height: 440px; }
+    .rail-slide .project-image img { max-height: 300px; }
+}
+@media (max-width: 620px) {
+    .rail-slide .project-video { max-height: 380px; }
+}
+
+/* ============================================================
+   Rail 媒體統一高度
+   ------------------------------------------------------------
+   問題：Alpha 兩張圖上下疊，各自跟著欄寬長高 → 那張卡片比其他三張
+   高出一截，整個 rail 就被撐大。
+   解法：媒體區固定 440px，三種型態都塞進同一個高度。
+     影片（1:2.17 直式） 203×440
+     單張照片            受欄寬限制，垂直置中
+     Alpha 兩張          各 213px，合計剛好 440px
+   四張卡片高度一致，切換時不會跳。
+   ============================================================ */
+.rail-slide {
+    --media-h: 440px;
+    grid-template-columns: 1.3fr 0.7fr;
+}
+
+.rail-slide > .project-image,
+.rail-slide > .project-image-gallery {
+    height: var(--media-h);
+    align-self: center;
+}
+
+/* 單張圖：整張塞進框內垂直置中，不裁切 */
+.rail-slide > .project-image > img {
+    width: 100%;
+    height: 100%;
+    max-height: none;
+    object-fit: contain;
+    object-position: center;
+}
+
+/* 影片：以高度為準，寬度自己跟著比例 */
+.rail-slide .project-video {
+    width: auto;
+    height: 100%;
+    max-height: var(--media-h);
+    max-width: 100%;
+    margin: 0 auto;
+    object-fit: contain;
+    border-radius: 12px;
+    box-shadow: 0 10px 28px rgba(0, 0, 0, 0.12);
+}
+
+/* Alpha：兩張上下均分同一個高度 */
+.rail-slide > .project-image-gallery {
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr 1fr;
+    gap: 14px;
+}
+.rail-slide > .project-image-gallery > img {
+    width: 100%;
+    height: 100%;
+    max-height: none;
+    object-fit: contain;
+    object-position: center;
+    border-radius: 8px;
+}
+
+@media (max-width: 968px) {
+    .rail-slide {
+        --media-h: 340px;
+        grid-template-columns: 1fr;
+        align-items: start;
+    }
+    .rail-slide > .project-image,
+    .rail-slide > .project-image-gallery { order: -1; margin-bottom: 1rem; }
+}
+@media (max-width: 620px) {
+    .rail-slide { --media-h: 300px; }
+}
+
+/* ============================================================
+   Rail 收窄：卡片從 2.26:1 的長條拉回接近方形
+   ------------------------------------------------------------
+   原本三張大卡是 1200px 寬、兩欄各半、三段長文撐高，所以接近方形。
+   Rail 沿用同樣寬度但媒體只有 440px 高 → 變成 1104×488 的長條。
+   把 rail 的容器收到 880px，卡片變 784×488，比例 1.61:1。
+   ============================================================ */
+.rail-head,
+.rail-viewport {
+    max-width: 880px;
+}
+.rail-slide {
+    flex-basis: calc(100% - 80px);   /* peek 從 96 收到 80，跟窄容器成比例 */
+    padding: 1.5rem;
+}
+.rail-track { gap: 20px; }
+
+@media (max-width: 968px) {
+    .rail-head, .rail-viewport { max-width: 100%; }
+    .rail-slide { flex-basis: calc(100% - 56px); }
+}
+@media (max-width: 680px) {
+    .rail-slide { flex-basis: calc(100% - 34px); }
+}
+
+/* Rail 容器拉回 1120px（A 預覽的寬度）— 卡片 1040×488，比例 2.13:1 */
+.rail-head,
+.rail-viewport { max-width: 1120px; }
+.rail-slide { flex-basis: calc(100% - 80px); }
+
+@media (max-width: 1180px) {
+    .rail-head, .rail-viewport { max-width: 100%; }
+}
+
+/* ============================================================
+   About / Selected Work 等比縮小
+   只縮容器寬度，字級、圖片尺寸、padding 全部不動。
+   1200 → 1060、1120 → 990（約 88%）
+   ============================================================ */
+.about-content,
+.capabilities,
+.project-grid { max-width: 1060px; }
+
+.rail-head,
+.rail-viewport { max-width: 990px; }
+
+/* 區塊標題的置中基準跟著收 */
+.projects > h2,
+.about > h2 { max-width: 1060px; margin-left: auto; margin-right: auto; }
+
+@media (max-width: 1120px) {
+    .about-content,
+    .capabilities,
+    .project-grid,
+    .rail-head,
+    .rail-viewport { max-width: 100%; }
+}
+
+/* ============================================================
+   About Me + Selected Work 等比縮小
+   ------------------------------------------------------------
+   --s 是縮放係數，所有尺寸都乘上它 —— 容器寬、間距、內距、
+   字級、照片、媒體高度全部一起縮，比例關係完全不變。
+   想再大或再小，只改 --s 這一個數字：
+     1     = 原尺寸
+     0.9   = 縮 10%（現在）
+     0.85  = 縮 15%
+     0.8   = 縮 20%
+   ============================================================ */
+:root { --s: 0.9; }
+
+/* ---------- About Me ---------- */
+.about { padding: calc(5rem * var(--s)) 2rem; }
+.about-content {
+    max-width: calc(1200px * var(--s));
+    gap: calc(4rem * var(--s));
+    padding: calc(2rem * var(--s));
+}
+.profile-photo { max-width: calc(400px * var(--s)); border-radius: calc(15px * var(--s)); }
+.about-text h2  { font-size: calc(clamp(1.9rem, 4.5vw, 2.5rem) * var(--s)); }
+.about-lead     { font-size: calc(clamp(1.35rem, 2.6vw, 1.75rem) * var(--s)); margin-bottom: calc(1.1rem * var(--s)); }
+.about-description { font-size: calc(0.95rem * var(--s)); margin-bottom: calc(0.9rem * var(--s)); }
+
+.capabilities   { max-width: calc(1200px * var(--s)); margin-top: calc(4rem * var(--s)); }
+.cap-heading    { font-size: calc(0.8rem * var(--s)); margin-bottom: calc(1.4rem * var(--s)); }
+.cap-row        { grid-template-columns: calc(190px * var(--s)) 1fr;
+                  gap: calc(2rem * var(--s)); padding: calc(0.95rem * var(--s)) 0; }
+.cap-row dt     { font-size: calc(1.05rem * var(--s)); gap: calc(0.7rem * var(--s)); }
+.cap-row dt i   { font-size: calc(0.85rem * var(--s)); }
+.cap-row dd     { font-size: calc(0.88rem * var(--s)); }
+.cap-tool       { font-size: calc(0.78rem * var(--s)); padding: calc(0.3rem * var(--s)) calc(0.72rem * var(--s)); }
+.cap-tool i     { font-size: calc(0.8rem * var(--s)); }
+
+/* ---------- Selected Work：三張大卡 ---------- */
+.projects       { padding: calc(5rem * var(--s)) 2rem; }
+.projects h2    { font-size: calc(clamp(2.2rem, 5vw, 3.2rem) * var(--s)); margin-bottom: calc(3.5rem * var(--s)); }
+.project-grid   { max-width: calc(1200px * var(--s)); gap: calc(2rem * var(--s)); }
+.project-grid .project-card {
+    padding: calc(1.9rem * var(--s));
+    gap: calc(2rem * var(--s));
+    border-radius: calc(15px * var(--s));
+}
+.project-head   { gap: calc(1rem * var(--s)); margin-bottom: calc(1.15rem * var(--s)); min-height: calc(1.75rem * var(--s)); }
+.project-grid .project-title { font-size: calc(clamp(1.65rem, 2.7vw, 2.1rem) * var(--s)); padding-bottom: calc(0.45rem * var(--s)); }
+.project-meta   { font-size: calc(0.78rem * var(--s)); margin-bottom: calc(0.85rem * var(--s)); }
+.project-description { font-size: calc(0.95rem * var(--s)); margin-bottom: calc(0.9rem * var(--s)); }
+.project-tags   { margin-top: calc(0.9rem * var(--s)); gap: calc(0.4rem * var(--s)); }
+.project-tags .tag { font-size: calc(0.68rem * var(--s)); padding: calc(0.24rem * var(--s)) calc(0.62rem * var(--s)); }
+.project-badge  { font-size: calc(0.66rem * var(--s)); padding: 0 calc(0.72rem * var(--s)); height: calc(1.75rem * var(--s)); }
+.project-links  { margin-top: calc(1.1rem * var(--s)); }
+.project-link.link-special { font-size: calc(1rem * var(--s)); }
+
+/* ---------- Selected Work：More Projects rail ---------- */
+.rail-head      { max-width: calc(1120px * var(--s)); margin: calc(5rem * var(--s)) auto calc(1.6rem * var(--s)); }
+.rail-title     { font-size: calc(clamp(1.6rem, 3.4vw, 2.2rem) * var(--s)); }
+.rail-viewport  { max-width: calc(1120px * var(--s)); }
+.rail-track     { gap: calc(20px * var(--s)); }
+.rail-slide {
+    flex-basis: calc(100% - (80px * var(--s)));
+    padding: calc(1.5rem * var(--s));
+    gap: calc(1.8rem * var(--s));
+    --media-h: calc(440px * var(--s));
+    border-radius: calc(15px * var(--s));
+}
+.rail-slide .project-title       { font-size: calc(1.32rem * var(--s)); padding-bottom: calc(0.38rem * var(--s)); }
+.rail-slide .project-meta        { font-size: calc(0.72rem * var(--s)); margin-bottom: calc(0.7rem * var(--s)); }
+.rail-slide .project-description { font-size: calc(0.86rem * var(--s)); margin-bottom: calc(0.7rem * var(--s)); }
+.rail-slide .project-tags .tag   { font-size: calc(0.64rem * var(--s)); padding: calc(0.2rem * var(--s)) calc(0.55rem * var(--s)); }
+.rail-slide .project-link.link-special { font-size: calc(0.9rem * var(--s)); }
+.rail-arw       { width: calc(42px * var(--s)); height: calc(42px * var(--s)); font-size: calc(0.95rem * var(--s)); }
+.rail-count     { font-size: calc(0.78rem * var(--s)); min-width: calc(62px * var(--s)); }
+.rail-bar       { width: calc(130px * var(--s)); }
+
+/* ============================================================
+   Badge 文字置中
+   ------------------------------------------------------------
+   .project-badge 基礎是 display:inline-block + 固定高度，
+   文字會貼在框的上緣。badge 移進 .project-head 之後，
+   原本負責置中的 .project-content > .project-badge 就不再命中。
+   另外 letter-spacing 會在最後一個字後面多留 0.09em，
+   用 text-indent 補回來，水平才真的置中。
+   ============================================================ */
+.project-badge,
+.project-head .project-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    text-indent: 0.09em;          /* 抵銷 letter-spacing 的尾端空隙 */
+    line-height: 1;
+    white-space: nowrap;
+    padding: 0 calc(0.8rem * var(--s));
+    height: calc(1.75rem * var(--s));
+}
